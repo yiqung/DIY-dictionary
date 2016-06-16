@@ -8,4 +8,6 @@
 - it has to add,delete,search,show the lastest add word,show the number of words functions
 ![](http://a3.qpic.cn/psb?/V13myjbk30ecui/wB*zj9RLSi2CB9bx.2fnWfANINP0PT3mFrWT7nngA6A!/b/dOMAAAAAAAAA&bo=BgFKAQAAAAADB24!&rf=viewer_4)
 
-### and it's not yet complete
+### and it's not yet complete because:
+- can't update listbox after add or delete words
+- 
