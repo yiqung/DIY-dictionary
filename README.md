@@ -5,5 +5,5 @@
 - so that can read English documentation faster.
 - GUI is written in thinter,
 - it has to add,delete,search,show the lastest add word,show the number of words functions
-![](https://app.yinxiang.com/shard/s62/res/a6ebf2da-2661-4221-84d1-3b2845846601/20160608193634.png)
+![](http://a3.qpic.cn/psb?/V13myjbk30ecui/wB*zj9RLSi2CB9bx.2fnWfANINP0PT3mFrWT7nngA6A!/b/dOMAAAAAAAAA&bo=BgFKAQAAAAADB24!&rf=viewer_4)
 ### and it's not yet complete
