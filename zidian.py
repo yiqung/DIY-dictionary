@@ -79,25 +79,24 @@ def button_word(event):
     def delete_button():
      
         word=listword.get(ACTIVE)
-        print(word)
+    
         f=open(word[0]+'.txt')
         wordstr=f.read()
-        print(wordstr)
+      
         wordstr=wordstr.replace(word+';\n','')
-        print(wordstr)
+    
         f=open(word[0]+'.txt','w')
         f.write(wordstr)
         f.close()
     word=str(alphabet.get(ACTIVE))
-    word=str(word[4])
+    word=str(word[0])
 
     f=open(word+'.txt')
     wordstr=f.read()
 
-            
     word_button=Toplevel()    
     word_button.title(word)
-        
+ 
     menubar=Menu(word_button,font='微软雅黑')
         
     word_button.config(menu=menubar)
@@ -113,26 +112,20 @@ def button_word(event):
         alphabet.update_idletasks()
             
     f.close()
-#=============================================A页面===================================================================
+#=============================================页面===================================================================
   
 root=Tk()
 root.title('自典')
-root.geometry('322x570+322+570')
 root.resizable(width=False,height=False)
 #===============================================添加=================================================================
 menubar=Menu(root,font='微软雅黑')
 root.config(menu=menubar)
 addword=menubar.add_command(label='add',font='微软雅黑',command=add_button)
 
-
-
-
-
-
 #=============================================搜索====================================================================
 
 input_word=Entry(root,font='微软雅黑',borderwidth=0)
-input_word.pack(fill=X,pady=5)
+input_word.grid()
 
 input_word.bind('<KeyPress-Return>',search_word)
 
@@ -140,7 +133,7 @@ input_word.bind('<KeyPress-Return>',search_word)
 
 alphabet=Listbox(root,borderwidth=0,font='微软雅黑')
 
-alphabet.pack( side = BOTTOM, fill = BOTH, expand = True )
+alphabet.grid()
 
 list_alphabet=os.listdir('.')
 
@@ -159,7 +152,7 @@ for each_file in list_alphabet:
 
         last_word=list_all_word.pop()
    
-    alphabet.insert(END,'    '+frist+'    '+last_word+'     '+str(word_count))
+    alphabet.insert(END,frist+'    '+last_word+'     '+str(word_count))
     alphabet.bind('<ButtonRelease>',button_word)
 
     
