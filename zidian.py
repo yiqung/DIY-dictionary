@@ -53,7 +53,7 @@ def add_button():
         add_explain.delete(0,END)
            
     Button(add,text='添加',borderwidth=0,font='微软雅黑',command=show).grid(row=3,column=1,sticky=E)
-addword=menubar.add_command(label='add',font='微软雅黑',command=add_button)
+addword=menubar.add_command(label='添加',font='微软雅黑',command=add_button)
 #==================================================================================================    
 def search_word(event):
 
