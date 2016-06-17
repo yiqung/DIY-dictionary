@@ -6,7 +6,5 @@
 - GUI is written in thinter,
 - run on Windows
 - it has to add,delete,search,show the lastest add word,show the number of words functions
-![](http://a3.qpic.cn/psb?/V13myjbk30ecui/wB*zj9RLSi2CB9bx.2fnWfANINP0PT3mFrWT7nngA6A!/b/dOMAAAAAAAAA&bo=BgFKAQAAAAADB24!&rf=viewer_4)
+![](http://a1.qpic.cn/psb?/V13myjbk30ecui/M14HRCHdV4GdFmjjNF5tkKhj6SeDMc7v1nzOu5XOZqk!/b/dAsBAAAAAAAA&bo=LQGHAQAAAAAFB44!&rf=viewer_4)
 
-### and it's not yet complete because
-- can't update listbox after add or delete words
