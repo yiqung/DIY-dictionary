@@ -23,9 +23,20 @@ class Zidian(QtWidgets.QMainWindow):
         self.editor.setObjectName("querybar")
         self.editor.setGeometry(0,0,200,20)
     def add_WordList(self):
-        self.wordslist = QtWidgets.QTableWidget(self)
+        self.wordslist = QtWidgets.QTableWidget(0, 2, self.mainwidgets)
         self.wordslist.setObjectName("wordlist")
-        self.wordslist.setGeometry(0,45,200,230)
+        self.wordslist.setGeometry(0,25,200,230)
+        self.wordslist.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.wordslist.setHorizontalHeaderLabels(["item", "counts"])
+        self.wordslist.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.wordslist.verticalHeader().hide()
+        self.wordslist.setShowGrid(False) 
+        #self.wordslist.insertRow(0)
+        #item1 = QtWidgets.QTableWidgetItem("a")
+        #self.wordslist.setItem(0,0, item1)
+        #item2 = QtWidgets.QTableWidgetItem("b")
+        #self.wordslist.setItem(0,1, item2)
+
     def add_Button(self):
         self.open_button = QtWidgets.QPushButton(self)
         self.open_button.setObjectName("openbutton")
@@ -35,7 +46,7 @@ class Zidian(QtWidgets.QMainWindow):
         self.fresh_button = QtWidgets.QPushButton(self)
         self.fresh_button.setObjectName("freshbutton")
         self.fresh_button.setGeometry(100,275,100, 25)
-        self.fresh_button.setText("Open")
+        self.fresh_button.setText("Refresh")
     def add_Menubar(self):
         menubar = self.menuBar()
         self.exit_action =menubar.addAction("Exit")
