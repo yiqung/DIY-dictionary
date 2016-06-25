@@ -4,6 +4,14 @@ import sys
 from PyQt5 import QtWidgets, QtCore, QtGui 
 from PyQt5.Qt import QApplication
 
+class C_AddMenu(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(C_AddMenu, self).__init__(parent)
+        self.addItem()
+    def addItem(self):
+        pass
+
+
 class Zidian(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(Zidian, self).__init__(parent)
@@ -31,12 +39,8 @@ class Zidian(QtWidgets.QMainWindow):
         self.wordslist.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.wordslist.verticalHeader().hide()
         self.wordslist.setShowGrid(False) 
-        #self.wordslist.insertRow(0)
-        #item1 = QtWidgets.QTableWidgetItem("a")
-        #self.wordslist.setItem(0,0, item1)
-        #item2 = QtWidgets.QTableWidgetItem("b")
-        #self.wordslist.setItem(0,1, item2)
-
+    def refresh_WordListItem(self):
+        pass
     def add_Button(self):
         self.open_button = QtWidgets.QPushButton(self)
         self.open_button.setObjectName("openbutton")
@@ -49,10 +53,21 @@ class Zidian(QtWidgets.QMainWindow):
         self.fresh_button.setText("Refresh")
     def add_Menubar(self):
         menubar = self.menuBar()
-        self.exit_action =menubar.addAction("Exit")
-        self.add_action = menubar.addAction("Add")
-        self.about_action = menubar.addAction("About")
+        self.exit_action = QtWidgets.QAction("Exit", menubar, triggered=self.close)
+        menubar.addAction(self.exit_action)
 
+        self.add_action = QtWidgets.QAction("Add", menubar, triggered=self.add)
+        menubar.addAction(self.add_action)
+        
+        self.about_action = QtWidgets.QAction("About", menubar, triggered=self.about)
+        menubar.addAction(self.about_action)
+    def add(self):
+        print("action action is triggered!")
+        itemadd_diag = C_AddMenu(self)
+        itemadd_diag.show()
+    def about(self):
+        print("action about is triggered!")
+        QtWidgets.QMessageBox.about(self,"About", "Zidian PyQtStyle \nby xufengfeng@2016.06.25")
 
 
 if  __name__ == "__main__":
