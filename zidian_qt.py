@@ -4,13 +4,39 @@ import sys
 from PyQt5 import QtWidgets, QtCore, QtGui 
 from PyQt5.Qt import QApplication
 
+dic_root="./words"
+
 class C_AddMenu(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(C_AddMenu, self).__init__(parent)
+        self.resize(200,90)
         self.addItem()
     def addItem(self):
-        pass
+        self.wordlabel = QtWidgets.QLabel(self)
+        self.wordlabel.setObjectName("wordlabel")
+        self.wordlabel.setGeometry(5,5,40,20)
+        self.wordlabel.setText("Word:")
 
+        self.wordEditor = QtWidgets.QLineEdit(self)
+        self.wordEditor.setObjectName("wordedit")
+        self.wordEditor.setGeometry(55,5,130,20)
+        
+        self.Explainlabel = QtWidgets.QLabel(self)
+        self.Explainlabel.setObjectName("explainlabel")
+        self.Explainlabel.setGeometry(5,30,50,20)
+        self.Explainlabel.setText("Explain:")
+        
+        self.ExplainEditor = QtWidgets.QLineEdit(self)
+        self.ExplainEditor.setObjectName("word")
+        self.ExplainEditor.setGeometry(55,30,130,20)
+        
+        self.addbutton = QtWidgets.QPushButton(self)
+        self.addbutton.clicked.connect(self.add_function)
+        self.addbutton.setObjectName("addbutton")
+        self.addbutton.setText("Add")
+        self.addbutton.setGeometry(125, 55, 60, 20)
+    def add_function(self):
+        print("add button is clicked")
 
 class Zidian(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
@@ -38,7 +64,9 @@ class Zidian(QtWidgets.QMainWindow):
         self.wordslist.setHorizontalHeaderLabels(["item", "counts"])
         self.wordslist.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.wordslist.verticalHeader().hide()
-        self.wordslist.setShowGrid(False) 
+        self.wordslist.setShowGrid(False)
+    def init_WordListItem(self):
+        pass 
     def refresh_WordListItem(self):
         pass
     def add_Button(self):
