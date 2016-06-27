@@ -1,10 +1,38 @@
 import os
 import sys
-
+import re
 from PyQt5 import QtWidgets, QtCore, QtGui 
 from PyQt5.Qt import QApplication
+from _overlapped import NULL
 
-dic_root="./words"
+headname="abcdefghijklmnopqrstuvwxyz"
+
+dir_root="./words"
+def CheckFiles():
+    def checkfile(file):
+        list_tmp=[]
+        if not re.match(r'[A-Za-z].txt', file):
+            print ("file %s is not match"%file)
+            return NULL, NULL
+        
+        path = os.path.join(dir_root,file)
+        with open(path) as fd:
+            x = fd.read()
+            list_tmp = x.split(";")
+            list_tmp.remove('')
+            length = len(list_tmp)
+        file = file.split('.')[0]
+        length = str(length) 
+        return file, length
+    
+    files = os.listdir(dir_root)
+    list_tmp=[]
+    for file in files:
+        x,y = checkfile(file)
+        if x != NULL:
+            list_tmp.append((x,y))
+    return list_tmp
+
 
 class C_AddMenu(QtWidgets.QDialog):
     def __init__(self, parent=None):
@@ -65,8 +93,22 @@ class Zidian(QtWidgets.QMainWindow):
         self.wordslist.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.wordslist.verticalHeader().hide()
         self.wordslist.setShowGrid(False)
+        
+        
+        self.init_WordListItem()
     def init_WordListItem(self):
-        pass 
+        list_tmp = CheckFiles()
+        for m in list_tmp:
+            row = self.wordslist.rowCount()
+            self.wordslist.insertRow(row)
+                        
+            file = QtWidgets.QTableWidgetItem(m[0])
+            count = QtWidgets.QTableWidgetItem(m[1])
+            file.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+            count.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+            
+            self.wordslist.setItem(row, 0, file)
+            self.wordslist.setItem(row, 1, count)
     def refresh_WordListItem(self):
         pass
     def add_Button(self):
@@ -74,11 +116,13 @@ class Zidian(QtWidgets.QMainWindow):
         self.open_button.setObjectName("openbutton")
         self.open_button.setGeometry(0,275,100, 25)
         self.open_button.setText("Open")
+        self.open_button.clicked.connect(self.action_open)
         
-        self.fresh_button = QtWidgets.QPushButton(self)
-        self.fresh_button.setObjectName("freshbutton")
-        self.fresh_button.setGeometry(100,275,100, 25)
-        self.fresh_button.setText("Refresh")
+        self.refresh_button = QtWidgets.QPushButton(self)
+        self.refresh_button.setObjectName("freshbutton")
+        self.refresh_button.setGeometry(100,275,100, 25)
+        self.refresh_button.setText("Refresh")
+        self.refresh_button.clicked.connect(self.action_refresh)
     def add_Menubar(self):
         menubar = self.menuBar()
         self.exit_action = QtWidgets.QAction("Exit", menubar, triggered=self.close)
@@ -96,6 +140,11 @@ class Zidian(QtWidgets.QMainWindow):
     def about(self):
         print("action about is triggered!")
         QtWidgets.QMessageBox.about(self,"About", "Zidian PyQtStyle \nby xufengfeng@2016.06.25")
+    def action_open(self):
+        print("action open is triggered!")
+        CheckFiles()
+    def action_refresh(self):
+        print("action refresh is triggered!")
 
 
 if  __name__ == "__main__":
