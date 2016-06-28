@@ -1,13 +1,14 @@
 import os
 import sys
 import re
+
 from PyQt5 import QtWidgets, QtCore, QtGui 
-from PyQt5.Qt import QApplication
+from PyQt5.Qt import QApplication, QWidget
 from _overlapped import NULL
 
 headname="abcdefghijklmnopqrstuvwxyz"
 
-dir_root="./words"
+dic_root="./words"
 def CheckFiles():
     def checkfile(file):
         list_tmp=[]
@@ -15,17 +16,17 @@ def CheckFiles():
             print ("file %s is not match"%file)
             return NULL, NULL
         
-        path = os.path.join(dir_root,file)
+        path = os.path.join(dic_root,file)
+        print("path:%s"%path)
+        counter = 0
         with open(path) as fd:
             x = fd.read()
-            list_tmp = x.split(";")
-            list_tmp.remove('')
-            length = len(list_tmp)
+            counter = x.count(":")
         file = file.split('.')[0]
-        length = str(length) 
+        length = str(counter) 
         return file, length
     
-    files = os.listdir(dir_root)
+    files = os.listdir(dic_root)
     list_tmp=[]
     for file in files:
         x,y = checkfile(file)
@@ -33,10 +34,42 @@ def CheckFiles():
             list_tmp.append((x,y))
     return list_tmp
 
+def store_word(word, explain):
+    print("%s:%s;"%(word, explain))
+    if re.match(r"^[a-zA-Z]", word):
+        print("word match!")
+    else:
+        print("word don't match!")
+        return "Failed"
+    file=word[0].upper()+".txt"
+    path=os.path.join(dic_root, file)
+    print("path2 = %s"%path)
+    word_match=word + ":" + explain +";"
+    if os.path.exists(path):
+        with open(path, 'a+') as fd:
+            fd.seek(0,0)
+            wordmatch_string = fd.read()
+            print("wordmatch_string:%s"%wordmatch_string)
+            wordmatch_list=wordmatch_string.split(";")
+            
+            wordlist = []
+            for wordmatch in wordmatch_list:
+                if not ":" in wordmatch:
+                    continue
+                word_x = wordmatch.split(":")
+                word_tmp= word_x[0]
+                explain_tmp = word_x[1]
+                if word == word_tmp:
+                    return "Exist"
+            fd.write(word_match)
+            fd.close()
+            return "OK"
+            
 
 class C_AddMenu(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(C_AddMenu, self).__init__(parent)
+        self.parent = parent
         self.resize(200,90)
         self.addItem()
     def addItem(self):
@@ -65,7 +98,22 @@ class C_AddMenu(QtWidgets.QDialog):
         self.addbutton.setGeometry(125, 55, 60, 20)
     def add_function(self):
         print("add button is clicked")
-
+        word = self.wordEditor.text()
+        explain = self.ExplainEditor.text()
+        print("%s:%s"%(word, explain))
+        ret = store_word(word, explain)
+        if ret == "OK":
+            self.wordEditor.setText("")
+            self.ExplainEditor.setText("")
+        elif ret == "Failed":
+            self.wordEditor.setText("")
+            self.ExplainEditor.setText("")
+            #QtWidgets.QMessageBox.Critical(self.parent,"xx", "Word Invalid.")
+            print("xx")
+        elif ret == "Exist":
+            #QtWidgets.QMessageBox.Warning(self.parent,"xx", "Word Exist.")
+            print("yy")
+            
 class Zidian(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(Zidian, self).__init__(parent)
