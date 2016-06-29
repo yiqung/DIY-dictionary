@@ -108,11 +108,9 @@ class C_AddMenu(QtWidgets.QDialog):
         elif ret == "Failed":
             self.wordEditor.setText("")
             self.ExplainEditor.setText("")
-            #QtWidgets.QMessageBox.Critical(self.parent,"xx", "Word Invalid.")
-            print("xx")
+            QtWidgets.QMessageBox.critical(self.parent,"xx", "Word Invalid.")
         elif ret == "Exist":
-            #QtWidgets.QMessageBox.Warning(self.parent,"xx", "Word Exist.")
-            print("yy")
+            QtWidgets.QMessageBox.warning(self.parent,"xx", "Word Exist.")
             
 class Zidian(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
@@ -142,10 +140,13 @@ class Zidian(QtWidgets.QMainWindow):
         self.wordslist.verticalHeader().hide()
         self.wordslist.setShowGrid(False)
         
+        self.wordslist.cellActivated.connect(self.action_open_row)
         
         self.init_WordListItem()
     def init_WordListItem(self):
         list_tmp = CheckFiles()
+        self.fileItems=[]
+        self.wordcountItems=[]
         for m in list_tmp:
             row = self.wordslist.rowCount()
             self.wordslist.insertRow(row)
@@ -155,10 +156,24 @@ class Zidian(QtWidgets.QMainWindow):
             file.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
             count.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
             
+            file.setFlags(file.flags() ^ QtCore.Qt.ItemIsEditable)
+            count.setFlags(count.flags() ^ QtCore.Qt.ItemIsEditable)
+            
             self.wordslist.setItem(row, 0, file)
             self.wordslist.setItem(row, 1, count)
+            
+            self.fileItems.append(file)
+            self.wordcountItems.append(count)
+            
     def refresh_WordListItem(self):
-        pass
+        list_tmp = CheckFiles()
+        #for m in list_tmp:
+        print ("list_tmp---->%r"%list_tmp)
+        x =0
+        for each in list_tmp:
+            self.wordcountItems[x].setText(each[1])
+            x += 1
+            
     def add_Button(self):
         self.open_button = QtWidgets.QPushButton(self)
         self.open_button.setObjectName("openbutton")
@@ -190,9 +205,17 @@ class Zidian(QtWidgets.QMainWindow):
         QtWidgets.QMessageBox.about(self,"About", "Zidian PyQtStyle \nby xufengfeng@2016.06.25")
     def action_open(self):
         print("action open is triggered!")
-        CheckFiles()
+        row = self.wordslist.currentRow()
+        item = self.wordslist.item(row,0)
+        print (item.text())
+    def action_open_row(self,row, column):
+        item = self.wordslist.item(row, 0)
+        #QDesktopServices.openUrl(QUrl(self.currentDir.absoluteFilePath(item.text())))
+        print(item.text())
+                
     def action_refresh(self):
         print("action refresh is triggered!")
+        self.refresh_WordListItem()
 
 
 if  __name__ == "__main__":
