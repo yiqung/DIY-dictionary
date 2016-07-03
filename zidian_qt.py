@@ -3,7 +3,7 @@ import sys
 import re
 
 from PyQt5 import QtWidgets, QtCore, QtGui 
-from PyQt5.Qt import QApplication, QWidget
+from PyQt5.Qt import QApplication, QWidget, QCoreApplication
 from _overlapped import NULL
 
 headname="abcdefghijklmnopqrstuvwxyz"
@@ -133,31 +133,78 @@ def get_words_matches_from_file(file):
     print(words)
     return words
 
-
+def save_words_matches_to_file(file, matches):
+    words=""
+    with open(file, "w+") as fd:
+        for each in matches:
+            words += each[0] + ":" + each[1] + ";"
+        fd.write(words)
+        
 class SubDicFile(QtWidgets.QDialog):
     def __init__(self, parent=None, filename=None):
         super(SubDicFile, self).__init__(parent)
-        self.resize(260,200)
+        
+        self.filename = filename
+        
+        self.resize(260,230)
         
         self.wordtable = QtWidgets.QTableWidget(0, 2, self)
+        self.wordtable.setObjectName("wordtable")
+        #self.wordtable.setGeometry(0, 0, 260, 200)
         self.wordtable.setHorizontalHeaderLabels(["name","explain"])
+        self.wordtable.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.wordtable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.wordtable.cellActivated.connect(self.action_show_word)
+        
+        self.deletebutton = QtWidgets.QPushButton(self)
+        self.deletebutton.setObjectName("delete")
+        self.deletebutton.setText("Delete")
+        self.deletebutton.setGeometry(200, 205, 60, 20)
+        self.deletebutton.clicked.connect(self.action_delete)
         
         print("x, file=%s"%filename)
         self.itemload(filename)
         self.show()
     def itemload(self, file):
-        words = get_words_matches_from_file(file)   
-        for each in words:
+        self.words = get_words_matches_from_file(file)   
+        for each in self.words:
             word =  QtWidgets.QTableWidgetItem(each[0])
             explain = QtWidgets.QTableWidgetItem(each[1])
+            
+            word.setFlags(word.flags()^QtCore.Qt.ItemIsEditable)
+            explain.setFlags(explain.flags()^QtCore.Qt.ItemIsEditable)
             
             row = self.wordtable.rowCount()
             self.wordtable.insertRow(row)
             
             self.wordtable.setItem(row, 0, word)
             self.wordtable.setItem(row, 1, explain)
-       
+    def action_delete(self):
+        print("action_delete is pressed.")
+        row = self.wordtable.currentRow()
+        if row < 0:
+            return
+        word = self.wordtable.item(row, 0)
+        explain = self.wordtable.item(row, 1)
+        
+        t = (word.text(),explain.text())
+        self.words.remove(t)
+        
+        save_words_matches_to_file(self.filename, self.words)
+        
+        self.wordtable.removeRow(row)
+    def action_show_word(self):
+        print("action_show_word is pressed.")
+        row = self.wordtable.currentRow()
+        word = self.wordtable.item(row, 0)
+        explain = self.wordtable.item(row, 1)
+        matches = word.text() + ":" + explain.text() 
+        QtWidgets.QMessageBox.information(self, "explain", matches)      
+    def action_exitt(self):
+        print("xxxxx")
+    def closeEvent(self, event):
+        self.parent.action_sub_exit()
+        event.accept()              
             
 class Zidian(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
@@ -261,7 +308,8 @@ class Zidian(QtWidgets.QMainWindow):
     def action_refresh(self):
         print("action refresh is triggered!")
         self.refresh_WordListItem()
-
+    def action_sub_exit(self):
+        print("yyyyy")
 
 if  __name__ == "__main__":
     print ("start zidian")
