@@ -111,6 +111,53 @@ class C_AddMenu(QtWidgets.QDialog):
             QtWidgets.QMessageBox.critical(self.parent,"xx", "Word Invalid.")
         elif ret == "Exist":
             QtWidgets.QMessageBox.warning(self.parent,"xx", "Word Exist.")
+
+def get_words_matches_from_file(file):
+    words_match = []
+    print("file=%s"%file)
+    with open(file, 'r+') as fd:
+        words_content = fd.read()
+    print("words_content =%r"%words_content)
+    if words_content == '':
+        print("words_content is none")
+        return words_match
+    words_list = words_content.split() #remove '\n' etc.
+    words_str= "".join(words_list)     #rejoin together
+    words_match = words_str.split(";")  
+    print("words_list=%r"%words_match)
+    words = []
+    for each in words_match:
+        l = each.split(":")
+        if len(l) == 2:
+            words.append((l[0],l[1]))
+    print(words)
+    return words
+
+
+class SubDicFile(QtWidgets.QDialog):
+    def __init__(self, parent=None, filename=None):
+        super(SubDicFile, self).__init__(parent)
+        self.resize(260,200)
+        
+        self.wordtable = QtWidgets.QTableWidget(0, 2, self)
+        self.wordtable.setHorizontalHeaderLabels(["name","explain"])
+        self.wordtable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        
+        print("x, file=%s"%filename)
+        self.itemload(filename)
+        self.show()
+    def itemload(self, file):
+        words = get_words_matches_from_file(file)   
+        for each in words:
+            word =  QtWidgets.QTableWidgetItem(each[0])
+            explain = QtWidgets.QTableWidgetItem(each[1])
+            
+            row = self.wordtable.rowCount()
+            self.wordtable.insertRow(row)
+            
+            self.wordtable.setItem(row, 0, word)
+            self.wordtable.setItem(row, 1, explain)
+       
             
 class Zidian(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
@@ -206,13 +253,11 @@ class Zidian(QtWidgets.QMainWindow):
     def action_open(self):
         print("action open is triggered!")
         row = self.wordslist.currentRow()
-        item = self.wordslist.item(row,0)
-        print (item.text())
+        self.action_open_row(row, 0)
     def action_open_row(self,row, column):
         item = self.wordslist.item(row, 0)
-        #QDesktopServices.openUrl(QUrl(self.currentDir.absoluteFilePath(item.text())))
         print(item.text())
-                
+        subdicfile = SubDicFile(self, os.path.join(dic_root,item.text()+".txt"))        
     def action_refresh(self):
         print("action refresh is triggered!")
         self.refresh_WordListItem()
