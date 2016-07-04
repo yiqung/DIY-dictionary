@@ -145,7 +145,8 @@ class SubDicFile(QtWidgets.QDialog):
         super(SubDicFile, self).__init__(parent)
         
         self.filename = filename
-        
+     
+        self.parent = self.parent()   
         self.resize(260,230)
         
         self.wordtable = QtWidgets.QTableWidget(0, 2, self)
@@ -199,13 +200,11 @@ class SubDicFile(QtWidgets.QDialog):
         word = self.wordtable.item(row, 0)
         explain = self.wordtable.item(row, 1)
         matches = word.text() + ":" + explain.text() 
-        QtWidgets.QMessageBox.information(self, "explain", matches)      
-    def action_exitt(self):
-        print("xxxxx")
-    def closeEvent(self, event):
-        self.parent.action_sub_exit()
+        QtWidgets.QMessageBox.information(self, "explain", matches)          
+    def closeEvent(self, event):  #rewrite the methord
+        self.parent.action_refresh()
         event.accept()              
-            
+    
 class Zidian(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(Zidian, self).__init__(parent)
@@ -308,8 +307,6 @@ class Zidian(QtWidgets.QMainWindow):
     def action_refresh(self):
         print("action refresh is triggered!")
         self.refresh_WordListItem()
-    def action_sub_exit(self):
-        print("yyyyy")
 
 if  __name__ == "__main__":
     print ("start zidian")
