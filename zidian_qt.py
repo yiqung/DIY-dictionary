@@ -1,3 +1,11 @@
+#####################################################################
+# Name£º                                zidian_qt(zidian of qt-style )
+# Author:         xufengfeng
+# Date:           2016/07/04
+# Discription:    
+# Todo£º                          
+#####################################################################
+
 import os
 import sys
 import re
