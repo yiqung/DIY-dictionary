@@ -1,9 +1,9 @@
 #####################################################################
-# Name£º                                zidian_qt(zidian of qt-style )
+# Name:    zidian_qt.py
 # Author:         xufengfeng
 # Date:           2016/07/04
-# Discription:    
-# Todo£º                          
+# Discription:
+# ToDo:                 
 #####################################################################
 
 import os
@@ -113,6 +113,7 @@ class C_AddMenu(QtWidgets.QDialog):
         if ret == "OK":
             self.wordEditor.setText("")
             self.ExplainEditor.setText("")
+            self.parent.action_refresh()
         elif ret == "Failed":
             self.wordEditor.setText("")
             self.ExplainEditor.setText("")
